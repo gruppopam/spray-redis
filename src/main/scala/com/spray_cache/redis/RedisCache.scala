@@ -7,7 +7,7 @@ import akka.util.Timeout
 import com.redis.RedisClient
 import com.redis.serialization.Format
 
-case class BinaryRedisCache[V](maxCapacity: Int = 500, initialCapacity: Int = 16)
+case class RedisCache[V](maxCapacity: Int = 500, initialCapacity: Int = 16)
                               (implicit val ec: ExecutionContext,
                                implicit val system: ActorSystem,
                                implicit val timeout: Timeout,
@@ -15,7 +15,7 @@ case class BinaryRedisCache[V](maxCapacity: Int = 500, initialCapacity: Int = 16
                                implicit val format: Format[V])
   extends Cache[V] {
 
-  private[BinaryRedisCache] val store = RedisBackedMap[V](maxCapacity, initialCapacity)
+  private[RedisCache] val store = RedisBackedMap[V](maxCapacity, initialCapacity)
 
   override def size: Int = store.size
 

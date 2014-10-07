@@ -6,8 +6,7 @@ import com.redis.RedisClient
 import akka.util.Timeout
 import akka.actor.ActorSystem
 import scala.concurrent._
-import com.redis.serialization.{DefaultFormats, Format}
-import DefaultFormats._
+import com.redis.serialization.Format
 
 case class RedisBackedMap[V](maxCapacity: Int, initialCapacity: Int)
                             (implicit val client: RedisClient,
