@@ -1,7 +1,13 @@
 package com.spray_cache.redis
 
-import com.redis.serialization.Format
+import redis.{ByteStringSerializer, ByteStringFormatter}
+import ByteStringSerializer._
+import akka.util.ByteString
 
 object Formats {
-  implicit val byteArrayFormat = Format[Array[Byte]](x => x.getBytes, x => new String(x))
+  implicit val format = new ByteStringFormatter[Array[Byte]] {
+    override def deserialize(bs: ByteString): Array[Byte] = bs.toArray[Byte]
+    override def serialize(data: Array[Byte]): ByteString = ArrayByteConverter.serialize(data)
+  }
+
 }

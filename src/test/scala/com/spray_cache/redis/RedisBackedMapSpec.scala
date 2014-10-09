@@ -3,15 +3,16 @@ package com.spray_cache.redis
 import org.scalatest.{Matchers, GivenWhenThen, FeatureSpec}
 
 import org.scalatest.mock.MockitoSugar
-import com.redis.RedisClient
 import org.mockito.Mockito
 import scala.concurrent.Future
 import org.scalatest.concurrent.ScalaFutures._
+import redis.RedisClient
 
 class RedisBackedMapSpec extends FeatureSpec with GivenWhenThen with Matchers {
 
   import spec.SpecHelper._
-
+  import Formats._
+  
   info("As a Redis backed Map")
   info("I should be able to perform map like operations for")
   info("1. Put into map")

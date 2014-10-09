@@ -2,23 +2,25 @@ package com.spray_cache.redis
 
 import org.scalatest.{Matchers, GivenWhenThen, FeatureSpec}
 
-import com.redis.RedisClient
 import scala.concurrent.{Await, Future}
 import org.scalatest.concurrent.ScalaFutures._
 import scala.concurrent.duration._
+import redis.RedisClient
+
 
 
 class RedisBackedMapIntegrationSpec extends FeatureSpec with GivenWhenThen with Matchers {
 
   import spec.SpecHelper._
+  import Formats._
 
-  implicit val client = RedisClient("localhost", 6379)
+
+  implicit val client = RedisClient()
 
   info("Redis Backed Map with the real redis")
 
   feature("get") {
     scenario("should read from redis if not present in the local store") {
-      import Formats.byteArrayFormat
       Given("I create a valid empty redis backed map")
       clearRedis
       val store = RedisBackedMap[Array[Byte]](10, 10)

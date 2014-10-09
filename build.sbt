@@ -16,6 +16,10 @@ resolvers += "spray repo" at "http://repo.spray.io"
 
 resolvers += "Scalaz Bintray Repo" at "http://dl.bintray.com/scalaz/releases"
 
+resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots/"
+
+resolvers += "rediscala" at "http://dl.bintray.com/etaty/maven"
+
 resolvers ++= Seq("snapshots", "releases").map(Resolver.sonatypeRepo)
 
 libraryDependencies ++= Seq(
@@ -26,5 +30,5 @@ libraryDependencies ++= Seq(
   "io.spray" %% "spray-can" % "1.3.1",
   "io.spray" %% "spray-caching" % "1.3.1",
   "io.spray" %% "spray-json" % "1.2.6",
-  "net.debasishg" %% "redisreact" % "0.6"
+  "com.etaty.rediscala" %% "rediscala" % "1.4.0"
 )

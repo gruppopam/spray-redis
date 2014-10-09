@@ -2,17 +2,14 @@ package com.spray_cache.redis
 
 import com.googlecode.concurrentlinkedhashmap.ConcurrentLinkedHashMap
 import scala.util.{Failure, Success}
-import com.redis.RedisClient
 import akka.util.Timeout
-import akka.actor.ActorSystem
 import scala.concurrent._
-import com.redis.serialization.Format
+import redis.{ByteStringDeserializer, ByteStringSerializer, RedisClient}
 
 case class RedisBackedMap[V](maxCapacity: Int, initialCapacity: Int)
                             (implicit val client: RedisClient,
-                             implicit val timeout: Timeout,
-                             implicit val system: ActorSystem,
-                             implicit val executionContext: ExecutionContext) {
+                             implicit val ec: ExecutionContext,
+                             implicit val timeout: Timeout) {
 
   require(maxCapacity > 0, "maxCapacity must be greater than 0")
   require(initialCapacity <= maxCapacity, "initialCapacity must be <= maxCapacity")
@@ -22,7 +19,8 @@ case class RedisBackedMap[V](maxCapacity: Int, initialCapacity: Int)
     .maximumWeightedCapacity(maxCapacity)
     .build()
 
-  def putIfAbsent(key: String, genValue: () => Future[V])(implicit format: Format[V]): Future[V] = {
+  def putIfAbsent(key: String, genValue: () => Future[V])(implicit serializer: ByteStringSerializer[V],
+                                                          deserializer: ByteStringDeserializer[V]): Future[V] = {
     val promise = Promise[V]()
     store.putIfAbsent(key.toString, promise.future) match {
       case null ⇒
@@ -51,7 +49,7 @@ case class RedisBackedMap[V](maxCapacity: Int, initialCapacity: Int)
     store.remove(key)
   }
 
-  def get(key: String)(implicit format: Format[V]): Future[V] = {
+  def get(key: String)(implicit deserializer: ByteStringDeserializer[V]): Future[V] = {
     if (store.containsKey(key)) return store.get(key)
     store.remove(key)
 
@@ -72,11 +70,11 @@ case class RedisBackedMap[V](maxCapacity: Int, initialCapacity: Int)
     store.clear()
   }
 
-  def redisWrite(key: String, value: V)(implicit format: Format[V]) = {
+  def redisWrite(key: String, value: V)(implicit serializer: ByteStringSerializer[V]) = {
     client.set(key, value)
   }
 
-  def redisGet(key: String)(implicit format: Format[V]) = for {
+  def redisGet(key: String)(implicit deserializer: ByteStringDeserializer[V]) = for {
     res <- client.get[V](key)
   } yield {
     res.get

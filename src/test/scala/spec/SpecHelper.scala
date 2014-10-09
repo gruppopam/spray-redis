@@ -3,7 +3,7 @@ package spec
 import akka.actor.ActorSystem
 import akka.util.Timeout
 import scala.concurrent.duration._
-import com.redis.RedisClient
+import redis.RedisClient
 
 
 object SpecHelper {
