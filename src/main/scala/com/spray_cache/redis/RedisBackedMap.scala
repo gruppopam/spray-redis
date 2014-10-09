@@ -32,7 +32,9 @@ case class RedisBackedMap[V](maxCapacity: Int, initialCapacity: Int)
             val write: Future[Boolean] = redisWrite(key, value get)
             write onComplete {
               case Success(_) => promise.complete(value)
-              case Failure(_) => promise.failure(new RuntimeException("Error when persisting to Redis"))
+              case Failure(f) =>
+                store.remove(key.toString)
+                promise.failure(new RuntimeException("Error when persisting to Redis", f))
             }
           case value@Failure(_) ⇒
             store.remove(key.toString)
@@ -57,8 +59,7 @@ case class RedisBackedMap[V](maxCapacity: Int, initialCapacity: Int)
     fromRedis onComplete {
       case Success(x) => store.put(key, fromRedis)
       case Failure(x) => {
-        println(x)
-        throw new RuntimeException("Failure when talking to redis")
+        throw new RuntimeException("Failure when talking to redis", x)
       }
     }
     fromRedis
