@@ -12,7 +12,7 @@ class RedisBackedMapSpec extends FeatureSpec with GivenWhenThen with Matchers {
 
   import spec.SpecHelper._
   import Formats._
-  
+
   info("As a Redis backed Map")
   info("I should be able to perform map like operations for")
   info("1. Put into map")

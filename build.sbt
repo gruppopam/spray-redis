@@ -26,9 +26,9 @@ libraryDependencies ++= Seq(
   "org.scalatest" %% "scalatest" % "2.2.1" % "test",
   "org.scalamock" %% "scalamock-scalatest-support" % "3.1.4" % "test",
   "org.mockito" % "mockito-core" % "1.9.5" % "test",
-  "com.typesafe.akka" %% "akka-actor" % "2.3.4",
-  "io.spray" %% "spray-can" % "1.3.1",
-  "io.spray" %% "spray-caching" % "1.3.1",
-  "io.spray" %% "spray-json" % "1.2.6",
-  "com.etaty.rediscala" %% "rediscala" % "1.4.0"
+  "com.typesafe.akka" %% "akka-actor" % "2.3.4" % "provided",
+  "io.spray" %% "spray-can" % "1.3.1" % "provided",
+  "io.spray" %% "spray-caching" % "1.3.1" % "provided",
+  "io.spray" %% "spray-json" % "1.2.6" % "provided",
+  "com.etaty.rediscala" %% "rediscala" % "1.4.0" % "provided"
 )
